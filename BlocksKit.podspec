@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.homepage              = 'https://zwaldowski.github.io/BlocksKit'
   s.author                = { 'Zachary Waldowski' => 'zach@waldowski.me',
                               'Alexsander Akers'  => 'a2@pnd.mn' }
-  s.source                = { :git => 'https://github.com/zwaldowski/BlocksKit.git', :tag => "v#{s.version}" }
+  s.source                = { :git => 'https://github.com/GlareCH/BlocksKit.git', :tag => "v#{s.version}" }
   s.requires_arc          = true
   s.osx.deployment_target = '10.8'
   s.ios.deployment_target = '6.0'
@@ -15,9 +15,6 @@ Pod::Spec.new do |s|
   s.default_subspec = 'All'
   s.subspec 'All' do |ss|
     ss.dependency 'BlocksKit/Core'
-    ss.dependency 'BlocksKit/DynamicDelegate'
-    ss.ios.dependency 'BlocksKit/MessageUI'
-    ss.ios.dependency 'BlocksKit/QuickLook'
     ss.ios.dependency 'BlocksKit/UIKit'
   end
 
@@ -25,29 +22,8 @@ Pod::Spec.new do |s|
     ss.source_files = 'BlocksKit/BlocksKit.h', "BlocksKit/BKDefines.h", 'BlocksKit/Core/*.{h,m}'
   end
 
-  s.subspec 'DynamicDelegate' do |ss|
-    ss.source_files = 'BlocksKit/DynamicDelegate/*.{h,m}', 'BlocksKit/DynamicDelegate/Foundation/*.{h,m}'
-  end
-
-  s.subspec 'MessageUI' do |ss|
-    ss.dependency 'BlocksKit/Core'
-    ss.dependency 'BlocksKit/DynamicDelegate'
-    ss.platform = :ios
-    ss.source_files = 'BlocksKit/BlocksKit+MessageUI.h', 'BlocksKit/MessageUI/*.{h,m}'
-    ss.ios.frameworks = 'MessageUI'
-  end
-
-  s.subspec 'QuickLook' do |ss|
-    ss.dependency 'BlocksKit/Core'
-    ss.dependency 'BlocksKit/DynamicDelegate'
-    ss.platform = :ios
-    ss.source_files = 'BlocksKit/BlocksKit+QuickLook.h', 'BlocksKit/QuickLook/*.{h,m}'
-    ss.ios.frameworks = 'QuickLook'
-  end
-
   s.subspec 'UIKit' do |ss|
     ss.dependency 'BlocksKit/Core'
-    ss.dependency 'BlocksKit/DynamicDelegate'
     ss.platform = :ios
     ss.source_files = 'BlocksKit/BlocksKit+UIKit.h', 'BlocksKit/UIKit/*.{h,m}'
   end
