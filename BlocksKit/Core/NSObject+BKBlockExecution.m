@@ -29,11 +29,22 @@ NS_INLINE dispatch_queue_t BKGetBackgroundQueue(void) {
 
 static id <NSObject, NSCopying> BKDispatchCancellableBlock(dispatch_queue_t queue, NSTimeInterval delay, void(^block)(void)) {
     dispatch_time_t time = BKTimeDelay(delay);
+    BOOL (^excuteImmediately)(void) = ^{
+        if (delay <= 0 && [NSThread isMainThread] && queue == dispatch_get_main_queue()) {
+            return YES;
+        } else {
+            return NO;
+        }
+    };
     
 #if DISPATCH_CANCELLATION_SUPPORTED
     if (BKSupportsDispatchCancellation()) {
         dispatch_block_t ret = dispatch_block_create(0, block);
-        dispatch_after(time, queue, ret);
+        if (excuteImmediately()) {
+            block();
+        } else {
+            dispatch_after(time, queue, ret);
+        }
         return ret;
     }
 #endif
@@ -47,9 +58,13 @@ static id <NSObject, NSCopying> BKDispatchCancellableBlock(dispatch_queue_t queu
         if (!cancelled) block();
     };
     
-    dispatch_after(time, queue, ^{
+    if (excuteImmediately()) {
         wrapper(NO);
-    });
+    } else {
+        dispatch_after(time, queue, ^{
+            wrapper(NO);
+        });
+    }
     
     return wrapper;
 }
